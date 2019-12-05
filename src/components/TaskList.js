@@ -1,15 +1,17 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Button from '@material-ui/core/Button';
-import {data} from '../data/fake_data';
 import Paper from '@material-ui/core/Paper';
 import TaskItem from './TaskItem';
+import TaskForm from './TaskForm';
 import TaskModal from './modal/TaskModal';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import {getTasks} from '../api/tasks.api.js';
+
 const useStyles = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(3, 2),
+    padding: theme.spacing(4, 2),
     background: "#DEDFE0",
     width: "400px",
   },
@@ -18,7 +20,8 @@ const useStyles = makeStyles(theme => ({
 const TaskList = () => {
   const classes = useStyles();
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [tasks, setTasks] = useState([])
 
   const handleOpen = () => {
     setOpen(true);
@@ -28,13 +31,24 @@ const TaskList = () => {
     setOpen(false);
   };
 
+  const handleCreate = (task) => {
+    setTasks([...tasks, task]);
+    handleClose();
+  }
+
+  useEffect(() => {
+    let result = getTasks();
+    setTasks(result);
+  }, []);
+
+  console.log(tasks, 'tasks')
   return (
     <Paper className={classes.root}>
       <div className="task-list">
         <Typography variant="h5" component="h3">
           Task List
         </Typography>
-          {data.map((task, index) => {
+          {tasks.map((task, index) => {
             return (
               <TaskItem
                 key={index}
@@ -51,7 +65,11 @@ const TaskList = () => {
         handleOpen={handleOpen}
         handleClose={handleClose}
         open={open}
-      />
+      >
+        <TaskForm
+          handleCreate={handleCreate}
+        />
+      </TaskModal>
     </Paper>
   );
 }

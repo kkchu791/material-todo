@@ -19,7 +19,7 @@ const TaskItem = ({
   return (
     <Card key={index} className={classes.card}>
       <CardContent>
-        {task.task}
+        {task.description}
       </CardContent>
     </Card>
   );

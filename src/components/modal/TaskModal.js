@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import TaskForm from '../TaskForm.js'
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -23,8 +22,10 @@ const TaskModal = ({
   handleOpen,
   handleClose,
   open,
+  children
 }) => {
   const classes = useStyles();
+
   return (
     <Modal
       aria-labelledby="transition-modal-title"
@@ -40,9 +41,7 @@ const TaskModal = ({
     >
       <Fade in={open}>
         <div className={classes.paper}>
-          <h2 id="transition-modal-title">modal</h2>
-          <p id="transition-modal-description">I am a modal.</p>
-          <TaskForm />
+          {children}
         </div>
       </Fade>
     </Modal>

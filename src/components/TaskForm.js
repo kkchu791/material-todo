@@ -6,6 +6,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 
+import {createTask} from '../api/tasks.api.js'
+
 const useStyles = makeStyles({
   formControl: {
     width: "100%",
@@ -13,7 +15,9 @@ const useStyles = makeStyles({
  },
 });
 
-const TaskForm = () => {
+const TaskForm = ({
+  handleCreate
+}) => {
   const classes = useStyles();
   const [data, setData] = useState({})
 
@@ -23,75 +27,64 @@ const TaskForm = () => {
     setData({...data, ...{[name]: value}})
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    console.log(data, 'data')
+    let task = await createTask(data)
 
-    // you have to get the list
-    // push your data into your list
-    // and then set it as the value
-
-    debugger
-
-    let taskList = sessionStorage.getItem('myData')
-
-    let newTaskList = (taskList || []).concat(data)
-
-
-
-    sessionStorage.setItem('data', newTaskList)
+    handleCreate(task)
   }
 
-  console.log(data, "data")
-
   return (
-    <form onSubmit={handleSubmit}>
-      <FormControl variant="outlined" className={classes.formControl}>
-        <label>
-          Task Name
-        </label>
+    <div>
+      <h2 id="form-title">Task Form</h2>
+      <form onSubmit={handleSubmit}>
+        <FormControl variant="outlined" className={classes.formControl}>
+          <label>
+            Description
+          </label>
 
-        <TextField
-          variant="outlined"
-          margin="normal"
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            id="description"
+            label="Description"
+            name="description"
+            onChange={handleInputChange}
+          />
+
+        </FormControl>
+
+        <FormControl variant="outlined" className={classes.formControl}>
+          <label id="priority-label">
+            Priority
+          </label>
+
+          <Select
+            labelId="priority-label"
+            name="priority"
+            id="priority-selector"
+            value={data["priority"] || "low"}
+            onChange={handleInputChange}
+          >
+            <MenuItem value="low">low</MenuItem>
+            <MenuItem value="medium">medium</MenuItem>
+            <MenuItem value="hard">hard</MenuItem>
+          </Select>
+        </FormControl>
+
+        <Button
+          type="submit"
           fullWidth
-          id="task_name"
-          label="Task Name"
-          name="task_name"
-          onChange={handleInputChange}
-        />
-
-      </FormControl>
-
-      <FormControl variant="outlined" className={classes.formControl}>
-        <label id="priority-label">
-          Priority
-        </label>
-
-        <Select
-          labelId="priority-label"
-          name="priority"
-          id="priority-selector"
-          value={data["priority"] || "low"}
-          onChange={handleInputChange}
+          variant="contained"
+          color="primary"
+          className={classes.submit}
         >
-          <MenuItem value="low">low</MenuItem>
-          <MenuItem value="medium">medium</MenuItem>
-          <MenuItem value="hard">hard</MenuItem>
-        </Select>
-      </FormControl>
-
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        color="primary"
-        className={classes.submit}
-      >
-          Save Task
-      </Button>
-    </form>
+            Save Task
+        </Button>
+      </form>
+    </div>
   );
 }
 
