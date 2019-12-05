@@ -1,26 +1,43 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   card: {
     margin: "8px 0",
+    display: "flex",
+    alignItems: "center",
   },
+  deleteButton: {
+    
+  },
+  cardContent: {
+    padding: "4px 10px",
+  }
 });
-
 
 
 const TaskItem = ({
   task,
-  index
+  index,
+  handleDelete,
 }) => {
   const classes = useStyles();
   return (
     <Card key={index} className={classes.card}>
-      <CardContent>
+      <div className={classes.cardContent}>
         {task.description}
-      </CardContent>
+
+        <IconButton
+          className={classes.deleteButton}
+          aria-label="delete"
+          onClick={() => handleDelete(task.id)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </div>
     </Card>
   );
 }

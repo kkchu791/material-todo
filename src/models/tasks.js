@@ -2,14 +2,24 @@ const generateId = () => {
   return Math.random().toString(36).substring(6);
 }
 
-const storeTask = (id, properties) => {
-  const json = JSON.stringify(properties);
+const storeTask = (id, task) => {
+  const json = JSON.stringify(task);
   sessionStorage.setItem(id, json);
 }
 
 const storeTaskId = (id) => {
   let taskIds = JSON.parse(sessionStorage.getItem("taskIds")) || []
   let newTaskIds = taskIds.concat(id)
+  sessionStorage.setItem("taskIds", JSON.stringify(newTaskIds))
+}
+
+const removeTask = (id) => {
+  sessionStorage.removeItem(id)
+}
+
+const removeTaskId = (id) => {
+  let taskIds = JSON.parse(sessionStorage.getItem("taskIds")) || []
+  let newTaskIds = taskIds.filter(taskId => taskId !== id)
   sessionStorage.setItem("taskIds", JSON.stringify(newTaskIds))
 }
 
@@ -25,13 +35,21 @@ class TaskService {
     return tasks;
   }
 
-  static create(taskProperties) {
+  static create(task) {
     const id = generateId();
-    storeTask(id, taskProperties)
+    task = {...task, ...{id: id}}
+    storeTask(id, task)
     storeTaskId(id)
 
-    return taskProperties;
+    return task;
   }
+
+  static delete(taskId) {
+    console.log(taskId, 'taskId double check')
+    removeTask(taskId)
+    removeTaskId(taskId)
+  }
+
 }
 
 export default TaskService;

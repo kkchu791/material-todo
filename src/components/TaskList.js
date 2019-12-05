@@ -7,7 +7,10 @@ import TaskModal from './modal/TaskModal';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import {getTasks} from '../api/tasks.api.js';
+import {
+  getTasks,
+  deleteTask
+} from '../api/tasks.api.js';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -36,12 +39,18 @@ const TaskList = () => {
     handleClose();
   }
 
+  const handleDelete = (id) => {
+    console.log(id, "id exists?")
+    deleteTask(id)
+
+    //simultaneious you want to remove a task by its id.
+  }
+
   useEffect(() => {
     let result = getTasks();
     setTasks(result);
   }, []);
 
-  console.log(tasks, 'tasks')
   return (
     <Paper className={classes.root}>
       <div className="task-list">
@@ -53,6 +62,7 @@ const TaskList = () => {
               <TaskItem
                 key={index}
                 task={task}
+                handleDelete={handleDelete}
               />
             )
           })}
