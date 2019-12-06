@@ -1,4 +1,4 @@
- import React, {useState} from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -6,7 +6,6 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
-
 
 const useStyles = makeStyles({
   formControl: {
@@ -29,7 +28,7 @@ const TaskForm = ({
     setTask({...task, ...{[name]: value}})
   }
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     if (task.id) {
       handleUpdate(task)
@@ -42,7 +41,10 @@ const TaskForm = ({
     <div>
       <h2 id="form-title">Task Form</h2>
       <form onSubmit={handleSubmit}>
-        <FormControl variant="outlined" className={classes.formControl}>
+        <FormControl
+          variant="outlined"
+          className={classes.formControl}
+        >
           <TextField
             variant="outlined"
             margin="normal"
@@ -62,7 +64,12 @@ const TaskForm = ({
           variant="outlined"
           className={classes.formControl}
         >
-          <InputLabel variant="outlined" htmlFor="priority-required">Priority</InputLabel>
+          <InputLabel
+            variant="outlined"
+            htmlFor="priority-required"
+          >
+            Priority
+          </InputLabel>
 
           <Select
             native

@@ -19,8 +19,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TaskModal = ({
-  handleOpen,
-  handleClose,
+  closeModal,
   open,
   children
 }) => {
@@ -32,7 +31,7 @@ const TaskModal = ({
       aria-describedby="transition-modal-description"
       className={classes.modal}
       open={open}
-      onClose={handleClose}
+      onClose={closeModal}
       closeAfterTransition
       BackdropComponent={Backdrop}
       BackdropProps={{

@@ -6,8 +6,8 @@ import TaskForm from './TaskForm';
 import TaskModal from './modal/TaskModal';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import TaskPubSub from '../models/task_pub_sub';
-import TaskService from '../models/tasks';
+import PubSub from '../models/PubSub';
+import TaskService from '../models/TaskService';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -34,36 +34,36 @@ const TaskList = () => {
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
-  const [tasks, setTasks] = useState([])
+  const [tasks, setTasks] = useState(TaskService.getAll())
   const [currentTask, setCurrentTask] = useState({})
   const [sort, setSort] = useState("none")
 
-  const handleOpen = () => {
+  const openModal = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const closeModal = () => {
     setOpen(false);
   };
 
   const handleNew = () => {
-    setOpen(true)
-    setCurrentTask({})
+    openModal();
+    setCurrentTask({});
   }
 
   const handleCreate = (task) => {
-    TaskService.create(task)
-    handleClose();
+    TaskService.create(task);
+    closeModal();
   }
 
-  const handleEdit = (id) => {
-    setOpen(true)
-    setCurrentTask(TaskService.get(id))
+  const handleEdit = (task) => {
+    openModal();
+    setCurrentTask(task);
   }
 
   const handleUpdate = (task) => {
-    TaskService.update(task)
-    handleClose();
+    TaskService.update(task);
+    closeModal();
   }
 
   const handleDelete = (id) => {
@@ -77,19 +77,15 @@ const TaskList = () => {
     setSort(sortValue);
   }
 
-  const sortTasks = () => {
+  const sortedTasks = () => {
     if (sort === "none") return tasks;
-    let sortedTasks;
     let order = sort === "high_priority" ? "desc" : "asc" ;
     return _.orderBy(tasks, ["priority"], [order]);
   }
 
   useEffect(() => {
-    TaskPubSub.subscribe(setTasks);
-
-    setTasks(TaskService.getAll());
-
-    return () => TaskPubSub.unsubscribe(setTasks);
+    PubSub.subscribe(setTasks);
+    return () => PubSub.unsubscribe(setTasks);
   }, []);
 
   return (
@@ -114,7 +110,7 @@ const TaskList = () => {
           </FormControl>
         </div>
 
-        {sortTasks().map((task, index) => {
+        {sortedTasks().map((task, index) => {
           return (
             <TaskItem
               key={index}
@@ -134,8 +130,7 @@ const TaskList = () => {
       </div>
 
       <TaskModal
-        handleOpen={handleOpen}
-        handleClose={handleClose}
+        closeModal={closeModal}
         open={open}
       >
         <TaskForm

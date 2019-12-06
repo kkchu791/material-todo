@@ -1,7 +1,13 @@
-import TaskPubSub from './task_pub_sub'
+import PubSub from './PubSub'
 
 const generateId = () => {
-  return Math.random().toString(36).substring(6);
+  const randomId = Math.random().toString(36).substring(6);
+
+  if (sessionStorage.getItem(randomId)) {
+    return generateId();
+  } else {
+    return randomId;
+  }
 }
 
 const getTaskIds = () => {
@@ -19,12 +25,16 @@ const removeTask = (id) => {
 
 const storeTaskId = (id) => {
   let newTaskIds = getTaskIds().concat(id)
-  sessionStorage.setItem("taskIds", JSON.stringify(newTaskIds))
+  storeTaskIds(newTaskIds)
 }
 
 const removeTaskId = (id) => {
-  let newTaskIds = getTaskIds().filter(taskId => taskId !== id)
-  sessionStorage.setItem("taskIds", JSON.stringify(newTaskIds))
+  let filteredTaskIds = getTaskIds().filter(taskId => taskId !== id)
+  storeTaskIds(filteredTaskIds)
+}
+
+const storeTaskIds = (ids) => {
+  sessionStorage.setItem("taskIds", JSON.stringify(ids))
 }
 
 class TaskService {
@@ -33,8 +43,8 @@ class TaskService {
   }
 
   static getAll() {
-    let taskIds = JSON.parse(sessionStorage.getItem('taskIds')) || []
-    return taskIds.map(id => this.get(id))
+    let taskIds = getTaskIds()
+    return taskIds.map(this.get)
   }
 
   static create(taskProperties) {
@@ -43,22 +53,21 @@ class TaskService {
     storeTask(id, task)
     storeTaskId(id)
 
-    TaskPubSub.publishChange();
+    PubSub.publishChange(this.getAll());
   }
 
   static update(task) {
     storeTask(task.id, task);
 
-    TaskPubSub.publishChange();
+    PubSub.publishChange(this.getAll());
   }
 
   static delete(taskId) {
     removeTask(taskId)
     removeTaskId(taskId)
 
-    TaskPubSub.publishChange();
+    PubSub.publishChange(this.getAll());
   }
-
 }
 
 export default TaskService;

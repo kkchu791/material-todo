@@ -1,7 +1,6 @@
 import _ from 'lodash';
-import TaskService from './tasks'
 
-class TaskPubSub {
+class PubSub {
   static set subscriptions(_subscriptions) {
     this._subscriptions = _subscriptions;
   }
@@ -18,9 +17,9 @@ class TaskPubSub {
     this.subscriptions = _.pull(this.subscriptions, callback)
   }
 
-  static publishChange() {
-    this.subscriptions.forEach((callback) => callback(TaskService.getAll()))
+  static publishChange(action) {
+    this.subscriptions.forEach((callback) => callback(action))
   }
 }
 
-export default TaskPubSub;
+export default PubSub;

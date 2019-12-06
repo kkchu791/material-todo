@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { makeStyles } from '@material-ui/core/styles';
-import { PRIORITIES } from '../utils/priority_helper';
+import { PRIORITIES } from '../utils/PriorityUtils';
 import Typography from '@material-ui/core/Typography';
 import CardActions from '@material-ui/core/CardActions';
 
@@ -23,7 +23,6 @@ const useStyles = makeStyles({
   },
 });
 
-
 const TaskItem = ({
   task,
   index,
@@ -37,7 +36,7 @@ const TaskItem = ({
         <Typography>
           {task.description} 
         </Typography>
-        <Typography  color="textSecondary" variant="body2" component="p">
+        <Typography  color="textSecondary" variant="body2">
           {`priority: ${PRIORITIES[task.priority]}`}
         </Typography>
       </div>
@@ -53,7 +52,7 @@ const TaskItem = ({
         <IconButton
           className={classes.editButton}
           aria-label="edit"
-          onClick={() => handleEdit(task.id)}
+          onClick={() => handleEdit(task)}
         >
           <EditIcon />
         </IconButton>
