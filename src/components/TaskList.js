@@ -6,12 +6,8 @@ import TaskForm from './TaskForm';
 import TaskModal from './modal/TaskModal';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import TaskService from '../models/tasks'
-
-import {
-  getTasks,
-  deleteTask
-} from '../api/tasks.api.js';
+import TaskPubSub from '../models/task_pub_sub';
+import TaskService from '../models/tasks';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -36,22 +32,20 @@ const TaskList = () => {
   };
 
   const handleCreate = (task) => {
-    //setTasks([...tasks, task]);
+    TaskService.create(task)
     handleClose();
   }
 
   const handleDelete = (id) => {
-    deleteTask(id)
+    TaskService.delete(id)
   }
 
   useEffect(() => {
-    TaskService.subscribe(setTasks);
+    TaskPubSub.subscribe(setTasks);
 
-    let result = getTasks()
+    setTasks(TaskService.getAll());
 
-    setTasks(result)
-
-    return () => TaskService.unsubscribe(setTasks);
+    return () => TaskPubSub.unsubscribe(setTasks);
   }, []);
 
   return (

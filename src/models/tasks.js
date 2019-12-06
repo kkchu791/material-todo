@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import TaskPubSub from './task_pub_sub'
 
 const generateId = () => {
   return Math.random().toString(36).substring(6);
@@ -26,26 +26,6 @@ const removeTaskId = (id) => {
 }
 
 class TaskService {
-  static set subscriptions(_subscriptions) {
-    this._subscriptions = _subscriptions;
-  }
-
-  static get subscriptions() {
-    return this._subscriptions || [];
-  }
-
-  static subscribe(callback) {
-    this.subscriptions = _.union(this.subscriptions, [callback])
-  }
-
-  static unsubscribe(callback) {
-    this.subscriptions = _.pull(this.subscriptions, callback)
-  }
-
-  static publishChange() {
-    this.subscriptions.forEach((callback) => callback(this.getAll()))
-  }
-
   static getAll() {
     let taskIds = JSON.parse(sessionStorage.getItem('taskIds')) || []
     let tasks = taskIds.map(id => {
@@ -60,15 +40,14 @@ class TaskService {
     storeTask(id, task)
     storeTaskId(id)
 
-    this.publishChange();
+    TaskPubSub.publishChange();
   }
 
   static delete(taskId) {
-    console.log(taskId, 'taskId double check')
     removeTask(taskId)
     removeTaskId(taskId)
 
-    this.publishChange();
+    TaskPubSub.publishChange();
   }
 
 }

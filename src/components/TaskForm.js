@@ -6,8 +6,6 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 
-import {createTask} from '../api/tasks.api.js'
-
 const useStyles = makeStyles({
   formControl: {
     width: "100%",
@@ -19,19 +17,16 @@ const TaskForm = ({
   handleCreate
 }) => {
   const classes = useStyles();
-  const [data, setData] = useState({})
+  const [task, setTask] = useState({})
 
   const handleInputChange = evt => {
     var value = evt.target.value
     var name = evt.target.name
-    setData({...data, ...{[name]: value}})
+    setTask({...task, ...{[name]: value}})
   }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    let task = await createTask(data)
-
     handleCreate(task)
   }
 
@@ -65,7 +60,7 @@ const TaskForm = ({
             labelId="priority-label"
             name="priority"
             id="priority-selector"
-            value={data["priority"] || "low"}
+            value={task.priority || "low"}
             onChange={handleInputChange}
           >
             <MenuItem value="low">low</MenuItem>
