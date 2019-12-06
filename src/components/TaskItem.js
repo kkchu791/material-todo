@@ -2,6 +2,7 @@ import React from 'react';
 import Card from '@material-ui/core/Card';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
@@ -23,6 +24,7 @@ const TaskItem = ({
   task,
   index,
   handleDelete,
+  handleEdit,
 }) => {
   const classes = useStyles();
   return (
@@ -36,6 +38,14 @@ const TaskItem = ({
           onClick={() => handleDelete(task.id)}
         >
           <DeleteIcon />
+        </IconButton>
+
+        <IconButton
+          className={classes.editButton}
+          aria-label="edit"
+          onClick={() => handleEdit(task.id)}
+        >
+          <EditIcon />
         </IconButton>
       </div>
     </Card>

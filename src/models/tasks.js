@@ -4,41 +4,50 @@ const generateId = () => {
   return Math.random().toString(36).substring(6);
 }
 
-const storeTask = (id, task) => {
-  const json = JSON.stringify(task);
-  sessionStorage.setItem(id, json);
+const getTaskIds = () => {
+  return JSON.parse(sessionStorage.getItem("taskIds")) || []
 }
 
-const storeTaskId = (id) => {
-  let taskIds = JSON.parse(sessionStorage.getItem("taskIds")) || []
-  let newTaskIds = taskIds.concat(id)
-  sessionStorage.setItem("taskIds", JSON.stringify(newTaskIds))
+const storeTask = (id, task) => {
+  task = JSON.stringify(task);
+  sessionStorage.setItem(id, task);
 }
 
 const removeTask = (id) => {
   sessionStorage.removeItem(id)
 }
 
+const storeTaskId = (id) => {
+  let newTaskIds = getTaskIds().concat(id)
+  sessionStorage.setItem("taskIds", JSON.stringify(newTaskIds))
+}
+
 const removeTaskId = (id) => {
-  let taskIds = JSON.parse(sessionStorage.getItem("taskIds")) || []
-  let newTaskIds = taskIds.filter(taskId => taskId !== id)
+  let newTaskIds = getTaskIds().filter(taskId => taskId !== id)
   sessionStorage.setItem("taskIds", JSON.stringify(newTaskIds))
 }
 
 class TaskService {
-  static getAll() {
-    let taskIds = JSON.parse(sessionStorage.getItem('taskIds')) || []
-    let tasks = taskIds.map(id => {
-      return JSON.parse(sessionStorage.getItem(id))
-    })
-    return tasks;
+  static get(id) {
+    return JSON.parse(sessionStorage.getItem(id))
   }
 
-  static create(task) {
+  static getAll() {
+    let taskIds = JSON.parse(sessionStorage.getItem('taskIds')) || []
+    return taskIds.map(id => this.get(id))
+  }
+
+  static create(taskProperties) {
     const id = generateId();
-    task = {...task, ...{id: id}}
+    const task = {...taskProperties, ...{id: id}}
     storeTask(id, task)
     storeTaskId(id)
+
+    TaskPubSub.publishChange();
+  }
+
+  static update(task) {
+    storeTask(task.id, task);
 
     TaskPubSub.publishChange();
   }

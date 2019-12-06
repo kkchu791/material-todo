@@ -14,10 +14,12 @@ const useStyles = makeStyles({
 });
 
 const TaskForm = ({
-  handleCreate
+  handleCreate,
+  handleUpdate,
+  currentTask,
 }) => {
   const classes = useStyles();
-  const [task, setTask] = useState({})
+  const [task, setTask] = useState(currentTask)
 
   const handleInputChange = evt => {
     var value = evt.target.value
@@ -27,7 +29,11 @@ const TaskForm = ({
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    handleCreate(task)
+    if (task.id) {
+      handleUpdate(task)
+    } else {
+      handleCreate(task)
+    }
   }
 
   return (
@@ -46,6 +52,7 @@ const TaskForm = ({
             id="description"
             label="Description"
             name="description"
+            value={task.description || ''}
             onChange={handleInputChange}
           />
 
@@ -60,7 +67,7 @@ const TaskForm = ({
             labelId="priority-label"
             name="priority"
             id="priority-selector"
-            value={task.priority || "low"}
+            value={task.priority || ""}
             onChange={handleInputChange}
           >
             <MenuItem value="low">low</MenuItem>

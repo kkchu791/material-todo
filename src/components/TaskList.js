@@ -22,6 +22,7 @@ const TaskList = () => {
 
   const [open, setOpen] = useState(false);
   const [tasks, setTasks] = useState([])
+  const [currentTask, setCurrentTask] = useState({})
 
   const handleOpen = () => {
     setOpen(true);
@@ -40,6 +41,16 @@ const TaskList = () => {
     TaskService.delete(id)
   }
 
+  const handleEdit = (id) => {
+    setOpen(true)
+    setCurrentTask(TaskService.get(id))
+  }
+
+  const handleUpdate = (task) => {
+    TaskService.update(task)
+    handleClose();
+  }
+
   useEffect(() => {
     TaskPubSub.subscribe(setTasks);
 
@@ -47,6 +58,8 @@ const TaskList = () => {
 
     return () => TaskPubSub.unsubscribe(setTasks);
   }, []);
+
+  console.log(currentTask, 'CurrentTask')
 
   return (
     <Paper className={classes.root}>
@@ -60,6 +73,7 @@ const TaskList = () => {
                 key={index}
                 task={task}
                 handleDelete={handleDelete}
+                handleEdit={handleEdit}
               />
             )
           })}
@@ -75,6 +89,8 @@ const TaskList = () => {
       >
         <TaskForm
           handleCreate={handleCreate}
+          handleUpdate={handleUpdate}
+          currentTask={currentTask}
         />
       </TaskModal>
     </Paper>
