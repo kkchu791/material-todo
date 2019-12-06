@@ -6,7 +6,8 @@ import Container from '@material-ui/core/Container';
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(3, 2),
-    height: "100vh"
+    height: "100vh",
+    overflowY: "auto",
   },
 }));
 
@@ -14,7 +15,7 @@ const App = () => {
   const classes = useStyles();
 
   return (
-    <Container fixed className={`${classes.root} App`}>
+    <Container className={`${classes.root} App`}>
       <TaskList />
     </Container>
   );
