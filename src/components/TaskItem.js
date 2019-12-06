@@ -4,6 +4,9 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { makeStyles } from '@material-ui/core/styles';
+import { PRIORITIES } from '../utils/priority_helper';
+import Typography from '@material-ui/core/Typography';
+import CardActions from '@material-ui/core/CardActions';
 
 const useStyles = makeStyles({
   card: {
@@ -11,12 +14,12 @@ const useStyles = makeStyles({
     display: "flex",
     alignItems: "center",
   },
-  deleteButton: {
-    
-  },
   cardContent: {
     padding: "4px 10px",
-  }
+  },
+  cardActions: {
+    marginLeft: "auto",
+  },
 });
 
 
@@ -30,8 +33,14 @@ const TaskItem = ({
   return (
     <Card key={index} className={classes.card}>
       <div className={classes.cardContent}>
-        {task.description}
-
+        <Typography>
+          {task.description} 
+        </Typography>
+        <Typography  color="textSecondary" variant="body2" component="p">
+          {`priority: (${PRIORITIES[task.priority]})`}
+        </Typography>
+      </div>
+      <CardActions className={classes.cardActions}>
         <IconButton
           className={classes.deleteButton}
           aria-label="delete"
@@ -47,7 +56,7 @@ const TaskItem = ({
         >
           <EditIcon />
         </IconButton>
-      </div>
+      </CardActions>
     </Card>
   );
 }

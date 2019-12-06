@@ -3,8 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+
 
 const useStyles = makeStyles({
   formControl: {
@@ -41,10 +43,6 @@ const TaskForm = ({
       <h2 id="form-title">Task Form</h2>
       <form onSubmit={handleSubmit}>
         <FormControl variant="outlined" className={classes.formControl}>
-          <label>
-            Description
-          </label>
-
           <TextField
             variant="outlined"
             margin="normal"
@@ -54,26 +52,36 @@ const TaskForm = ({
             name="description"
             value={task.description || ''}
             onChange={handleInputChange}
+            required={true}
           />
 
         </FormControl>
 
-        <FormControl variant="outlined" className={classes.formControl}>
-          <label id="priority-label">
-            Priority
-          </label>
+        <FormControl
+          required
+          variant="outlined"
+          className={classes.formControl}
+        >
+          <InputLabel variant="outlined" htmlFor="priority-required">Priority</InputLabel>
 
           <Select
-            labelId="priority-label"
+            native
+            variant="outlined"
             name="priority"
             id="priority-selector"
-            value={task.priority || ""}
+            value={task.priority || 0}
             onChange={handleInputChange}
+            required
+            inputProps={{
+              id: 'priority-required',
+            }}
           >
-            <MenuItem value="low">low</MenuItem>
-            <MenuItem value="medium">medium</MenuItem>
-            <MenuItem value="hard">hard</MenuItem>
+            <option></option>
+            <option value={1}>low</option>
+            <option value={2}>medium</option>
+            <option value={3}>hard</option>
           </Select>
+          <FormHelperText>Required</FormHelperText>
         </FormControl>
 
         <Button
