@@ -13,6 +13,7 @@ const useStyles = makeStyles({
     margin: "8px 0",
     display: "flex",
     alignItems: "center",
+    background: "#9CAFB7",
   },
   cardContent: {
     padding: "4px 10px",
@@ -37,7 +38,7 @@ const TaskItem = ({
           {task.description} 
         </Typography>
         <Typography  color="textSecondary" variant="body2" component="p">
-          {`priority: (${PRIORITIES[task.priority]})`}
+          {`priority: ${PRIORITIES[task.priority]}`}
         </Typography>
       </div>
       <CardActions className={classes.cardActions}>

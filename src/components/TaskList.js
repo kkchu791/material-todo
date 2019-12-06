@@ -17,8 +17,7 @@ import _ from 'lodash'
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(4, 2),
-    background: "#DEDFE0",
-    width: "400px",
+    background: "#EAD2AC",
   },
   taskListHeader: {
     position: "relative",
@@ -27,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     right: '5px',
     bottom: '0',
-    width: '100px',
+    width: '124px',
   },
 }));
 
@@ -37,7 +36,7 @@ const TaskList = () => {
   const [open, setOpen] = useState(false);
   const [tasks, setTasks] = useState([])
   const [currentTask, setCurrentTask] = useState({})
-  const [sort, setSort] = useState("None")
+  const [sort, setSort] = useState("none")
 
   const handleOpen = () => {
     setOpen(true);
@@ -73,18 +72,16 @@ const TaskList = () => {
 
   const handleSortChange = (event) => {
     event.preventDefault();
-    setSort(event.target.value);
+    const sortValue = event.target.value;
 
+    setSort(sortValue);
+  }
+
+  const sortTasks = () => {
+    if (sort === "none") return tasks;
     let sortedTasks;
-    if (event.target.value === "high_priority") {
-      sortedTasks = _.orderBy(tasks, ["priority"], ["desc"]);
-    } else if (event.target.value === "low_priority") {
-      sortedTasks = _.orderBy(tasks, ["priority"], ["asc"]);
-    } else {
-      sortedTasks = TaskService.getAll()
-    }
-
-    setTasks(sortedTasks)
+    let order = sort === "high_priority" ? "desc" : "asc" ;
+    return _.orderBy(tasks, ["priority"], [order]);
   }
 
   useEffect(() => {
@@ -95,13 +92,11 @@ const TaskList = () => {
     return () => TaskPubSub.unsubscribe(setTasks);
   }, []);
 
-  console.log(currentTask, 'CurrentTask')
-
   return (
     <Paper className={classes.root}>
       <div className="task-list">
         <div className={classes.taskListHeader}>
-          <Typography variant="h5" component="h3">
+          <Typography variant="h6" className={classes.taskListName}>
             Task List
           </Typography>
 
@@ -112,14 +107,14 @@ const TaskList = () => {
               value={sort || ""}
               onChange={handleSortChange}
             >
-              <MenuItem value="None"><em>None</em></MenuItem>
+              <MenuItem value="none"><em>None</em></MenuItem>
               <MenuItem value="high_priority">High Priority</MenuItem>
               <MenuItem value="low_priority">Low Priority</MenuItem>
             </Select>
           </FormControl>
         </div>
 
-        {tasks.map((task, index) => {
+        {sortTasks().map((task, index) => {
           return (
             <TaskItem
               key={index}

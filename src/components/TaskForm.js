@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+ import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -79,7 +79,7 @@ const TaskForm = ({
             <option></option>
             <option value={1}>low</option>
             <option value={2}>medium</option>
-            <option value={3}>hard</option>
+          <option value={3}>high</option>
           </Select>
           <FormHelperText>Required</FormHelperText>
         </FormControl>
