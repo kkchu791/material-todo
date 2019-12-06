@@ -6,6 +6,7 @@ import TaskForm from './TaskForm';
 import TaskModal from './modal/TaskModal';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import TaskService from '../models/tasks'
 
 import {
   getTasks,
@@ -35,20 +36,24 @@ const TaskList = () => {
   };
 
   const handleCreate = (task) => {
-    setTasks([...tasks, task]);
+    //setTasks([...tasks, task]);
     handleClose();
   }
 
   const handleDelete = (id) => {
-    console.log(id, "id exists?")
     deleteTask(id)
 
     //simultaneious you want to remove a task by its id.
   }
 
   useEffect(() => {
-    let result = getTasks();
-    setTasks(result);
+    TaskService.subscribe(setTasks);
+
+    let result = getTasks()
+
+    setTasks(result)
+
+    return () => TaskService.unsubscribe(setTasks);
   }, []);
 
   return (

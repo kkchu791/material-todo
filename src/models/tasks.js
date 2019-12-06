@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 const generateId = () => {
   return Math.random().toString(36).substring(6);
 }
@@ -24,14 +26,31 @@ const removeTaskId = (id) => {
 }
 
 class TaskService {
+  static set subscriptions(_subscriptions) {
+    this._subscriptions = _subscriptions;
+  }
+
+  static get subscriptions() {
+    return this._subscriptions || [];
+  }
+
+  static subscribe(callback) {
+    this.subscriptions = _.union(this.subscriptions, [callback])
+  }
+
+  static unsubscribe(callback) {
+    this.subscriptions = _.pull(this.subscriptions, callback)
+  }
+
+  static publishChange() {
+    this.subscriptions.forEach((callback) => callback(this.getAll()))
+  }
+
   static getAll() {
-
     let taskIds = JSON.parse(sessionStorage.getItem('taskIds')) || []
-
     let tasks = taskIds.map(id => {
       return JSON.parse(sessionStorage.getItem(id))
     })
-
     return tasks;
   }
 
@@ -41,7 +60,7 @@ class TaskService {
     storeTask(id, task)
     storeTaskId(id)
 
-    return task;
+    this.publishChange();
   }
 
   static delete(taskId) {
