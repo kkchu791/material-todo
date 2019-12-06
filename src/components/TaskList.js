@@ -42,8 +42,6 @@ const TaskList = () => {
 
   const handleDelete = (id) => {
     deleteTask(id)
-
-    //simultaneious you want to remove a task by its id.
   }
 
   useEffect(() => {

@@ -67,6 +67,8 @@ class TaskService {
     console.log(taskId, 'taskId double check')
     removeTask(taskId)
     removeTaskId(taskId)
+
+    this.publishChange();
   }
 
 }
